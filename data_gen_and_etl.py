@@ -12,8 +12,14 @@ fake_unique = fake.unique
 NUM_NEW_CUSTOMERS = 10000  # Generate 10,000 new customers each run
 NUM_NEW_SALES = 50000      # Generate 50,000 new sales each run
 
-# MySQL connection details
-engine = create_engine('mysql+mysqlconnector://root:root@localhost:3306/ecommerce', pool_size=10, max_overflow=20)
+# Define AWS RDS MySQL connection details
+aws_rds_endpoint = 'my-ecommerce-db.cn68aoymgc0l.us-west-1.rds.amazonaws.com'  # Replace with your AWS RDS endpoint
+db_user = 'shiv'  # Replace with your database username
+db_password = 'Awesomeward15$'  # Replace with your password
+db_name = 'ecommerce'
+
+# Update the MySQL connection string
+engine = create_engine(f'mysql+mysqlconnector://{db_user}:{db_password}@{aws_rds_endpoint}:3306/{db_name}', pool_size=10, max_overflow=20)
 
 # Generate new customer data with unique email addresses
 def generate_customers(num_customers, start_id):
