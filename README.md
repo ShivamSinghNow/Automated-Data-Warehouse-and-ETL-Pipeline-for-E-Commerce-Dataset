@@ -1,65 +1,120 @@
-Project Title: Automated Data Warehouse and ETL Pipeline for E-Commerce Dataset
+# Data Engineering and Visualization Pipeline
 
-Project Description:
+## Project Overview
+This project involves building an end-to-end data engineering pipeline using **Python 3**, **AWS EC2 and RDS**, **PySpark**, and **Tableau**. The goal was to extract, transform, and load (ETL) e-commerce data from MySQL (hosted on AWS RDS), perform data transformations using PySpark, and visualize the results in Tableau.
 
-This project focuses on building an automated ETL pipeline and a data warehouse for an e-commerce dataset, demonstrating core skills in data engineering, automation, and data visualization. The project includes the following components:
+The project demonstrates advanced **data engineering skills**, **cloud infrastructure management**, and **data visualization capabilities**, with automation and scalability at its core.
 
-Data Generation: A Python script generates daily data for customer and sales transactions, simulating a real-world scenario of continuous data inflow. This provides the foundation for building a robust ETL pipeline that handles frequent data updates.
+## Technologies Used 
+1. **Python 3:** For ETL pipeline implementation.
+2. **AWS EC2:** For hosting and running scripts in a scalable cloud environment.
+3. **AWS RDS:** To store the e-commerce dataset in a MySQL database.
+4. **PySpark:** For data transformation and aggregation.
+5. **Tableau:** To create dashboards and visualizations.
+6. **MySQL Connector:** To enable interaction between PySpark and MySQL.
 
-ETL Process: The ETL pipeline, implemented using Python and SQL, extracts raw data, transforms it into the desired format, and loads it into a MySQL data warehouse. The ETL process includes steps for handling new data incrementally, reducing redundancy and ensuring that the data warehouse is always up to date.
+---
 
-Data Warehouse: The data warehouse schema follows a star schema approach, with a dimension table (dim_customers) containing customer information and a fact table (fact_sales) containing sales transactions. This structure enables efficient querying and analysis of the data.
+## Thought Process Behind the Steps
 
-Automation: The ETL process is fully automated using cron jobs, which schedule the data generation and transformation tasks on a daily basis. This automation showcases the ability to build a scalable and maintainable data pipeline without manual intervention.
+### 1. Setting Up the Environment
+**Objective:** Host the data and the ETL process in a cloud environment.
 
-Data Analysis and Visualization: The project also includes the use of Tableau to create visualizations for key business metrics, such as monthly sales trends and top customer spending. These visualizations demonstrate how the data warehouse can be used to derive actionable insights for business decision-making.
+* **AWS EC2:** Chosen as the compute instance for running Python and PySpark scripts. EC2 provides flexibility in scaling and a reliable environment to handle the pipeline execution.
+* **AWS RDS:** Selected to store the e-commerce dataset, providing a fully managed relational database.
 
-Key Features:
+**Challenges:**
+- **Configuring AWS:** Setting up security groups, ensuring the EC2 and RDS instances were in the same VPC, and enabling public accessibility for RDS.
+- **Installing Dependencies:** Downloading and configuring Python, Java (for PySpark), MySQL Connector, and other required libraries on the EC2 instance.
 
-Fully automated data generation and ETL pipeline.
+**Solutions:** 
+- Detailed documentation for each step, such as configuring inbound rules for RDS and troubleshooting EC2 connectivity issues, ensured a smooth setup.
+- Leveraged **crontab** to automate the Python script, ensuring ETL tasks ran daily.
 
-Incremental data updates for efficient data warehouse maintenance.
+---
 
-Use of MySQL for data warehousing and schema design.
+### 2. Extracting and Loading Data
+**Objective:** Fetch e-commerce data, load it into the database, and automate this process.
 
-Tableau visualizations for business insights.
+* A **Python script** was created to:
+  - Generate synthetic e-commerce data using the Faker library.
+  - Load the data into the **MySQL database** hosted on AWS RDS.
+* The ETL pipeline was automated using **crontab** to run at midnight every day.
 
-Demonstrates scalability, automation, and strong data engineering practices.
+**Challenges:**
+- Ensuring that the **MySQL schema** and tables were properly created on RDS using SQL files.
+- Automating the process and validating data integrity after every run.
 
-Technologies Used:
+**Solutions:**
+- Verified the schema setup and used Python’s SQLAlchemy library to ensure consistent data loading.
+- Implemented automated checks for record counts and data accuracy.
 
-Python (data generation, ETL process)
+---
 
-MySQL (data warehouse, schema design)
+### 3. Transforming Data with PySpark
+**Objective:** Perform complex transformations and aggregations to prepare the data for visualization.
 
-Cron Jobs (automation)
+* **PySpark** was used for its scalability and efficiency in handling large datasets. Key transformations included:
+  - Joining customer and sales data to enrich information.
+  - Calculating **monthly revenue per customer**.
+  - Aggregating total sales and revenue across time periods.
 
-Tableau (data visualization)
+**Challenges:**
+- Configuring **PySpark** on AWS EC2, including downloading and setting up the correct Spark version, Java dependencies, and Hadoop libraries.
+- Connecting PySpark to MySQL using the **MySQL Connector** jar.
 
-How to Run the Project:
+**Solutions:**
+- Used the `spark-submit` command with the `--jars` option to include the MySQL Connector during runtime.
+- Verified the transformations step-by-step using the PySpark interactive shell.
 
-Data Generation: The Python script data_generation_script.py is scheduled to run daily using a cron job. It generates new customer and sales data files (new_customers_data.json and new_sales_data.csv).
+---
 
-ETL Process: The ETL script (etl_pipeline_script.py) is also scheduled using a cron job to extract, transform, and load the generated data into the MySQL database.
+### 4. Visualizing Data with Tableau
+**Objective:** Create interactive dashboards to visualize insights from the transformed data.
 
-Data Warehouse: The MySQL database stores the transformed data in dimension and fact tables, which are optimized for querying.
+* Tableau was used to:
+  - Connect to the MySQL database on AWS RDS.
+  - Create visualizations such as bar charts, line graphs, and heatmaps to display trends and key metrics.
+  - Build a dashboard for **monthly revenue trends** and **customer sales distribution**.
 
-Visualization: Use Tableau to connect to the MySQL database and visualize the data for insights.
+**Challenges:**
+- Configuring Tableau to connect with MySQL RDS using the correct **MySQL ODBC driver**.
+- Troubleshooting Tableau connectivity issues related to authentication plugins like `mysql_native_password`.
 
-Usage Instructions:
+**Solutions:**
+- Modified the MySQL RDS **parameter group** to use the appropriate authentication plugin.
+- Installed the **Tableau MySQL driver** and verified connection parameters.
 
-Clone the repository and set up the required environment (Python, MySQL, Tableau).
+---
 
-Modify the cron job schedules to fit your desired frequency of data updates.
+## Key Challenges Faced
+1. **AWS Configuration:**
+   - Ensuring security groups allowed connectivity between EC2 and RDS.
+   - Resolving issues with public accessibility for the RDS instance.
 
-Run the Python scripts to generate and load data into the MySQL database.
+2. **Dependency Management:**
+   - Installing PySpark and Java on EC2, and configuring the correct environment variables.
+   - Using the correct MySQL Connector jar to enable communication between PySpark and MySQL.
 
-Potential Extensions:
+3. **Automation:**
+   - Setting up **crontab** to automate the ETL process.
+   - Validating that the scripts ran successfully and data was loaded as expected.
 
-Implement real-time streaming data ingestion using Apache Kafka and Spark.
+4. **Visualization Challenges:**
+   - Resolving Tableau authentication issues with MySQL.
+   - Designing meaningful and interactive dashboards.
 
-Add more complex transformation logic, such as data enrichment or deduplication.
+---
 
-Integrate with cloud services like AWS or GCP for scalable storage and processing.
+## Future Work
+1. **Adding More Visualizations:**
+   - Include heatmaps, scatter plots, and time-series charts in Tableau to uncover deeper insights.
+2. **Scaling the Pipeline:**
+   - Introduce **AWS S3** to store intermediate data and enhance scalability.
+   - Leverage **Apache Airflow** for more advanced workflow orchestration.
+3. **Big Data Handling:**
+   - Experiment with **AWS EMR** or **Databricks** for distributed data processing.
 
-This project showcases the complete lifecycle of data engineering, from raw data generation to automated ETL processes, data warehousing, and visual analytics. It highlights best practices in data automation, scalability, and effective data presentation for decision-making.
+---
+
+## Repository Structure
